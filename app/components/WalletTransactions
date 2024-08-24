@@ -1,0 +1,27 @@
+import React from 'react';
+import { useWallet } from '../contexts/WalletContext';
+import { useTheme } from '../contexts/ThemeContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGear } from '@fortawesome/free-solid-svg-icons';
+
+const WalletTransactions = () => {
+  const { wallet } = useWallet();
+  const { theme } = useTheme();
+
+  return (
+    <div className={`wallet-transactions ${theme}`}>
+      <h2>Wallet Transactions</h2>
+      <ul>
+        {wallet.transactions.map((transaction) => (
+          <li key={transaction.id}>
+            <span>{transaction.date}</span>
+            <span>{transaction.amount}</span>
+            <span>{transaction.type}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default WalletTransactions;
