@@ -43,3 +43,40 @@ const Input = forwardRef((props, ref) => {
 
   const handleFocus = () => {
     setFocused(true);
+  };
+
+  const handleBlur = () => {
+    setFocused(false);
+  };
+
+  return (
+    <input
+      ref={ref}
+      value={value}
+      onChange={onChange}
+      onBlur={handleBlur}
+      onFocus={handleFocus}
+      disabled={disabled}
+      className={clsx(classes.root, {
+        [classes.error]: error,
+      })}
+      {...other}
+    />
+  );
+});
+
+Input.propTypes = {
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onBlur: PropTypes.func,
+  onFocus: PropTypes.func,
+  error: PropTypes.bool,
+  disabled: PropTypes.bool,
+};
+
+Input.defaultProps = {
+  error: false,
+  disabled: false,
+};
+
+export default Input;
