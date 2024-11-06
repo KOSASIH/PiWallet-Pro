@@ -1,3 +1,4 @@
+
 name: NodeJS with Gulp
 
 on:
@@ -22,7 +23,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Build
+    - name: Install and Build
       run: |
         npm install
         gulp
