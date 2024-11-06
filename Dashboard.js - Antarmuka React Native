@@ -1,0 +1,69 @@
+import React, { useState } from 'react';
+import { View, Text, Button, Alert, TextInput } from 'react-native';
+import PiWalletPro from './PiWalletPro';
+
+function Dashboard() {
+    const wallet = new PiWalletPro();
+    const [password, setPassword] = useState('');
+    const [address, setAddress] = useState('');
+
+    // Handle biometric login
+    const handleBiometricLogin = () => {
+        wallet.authenticateWithBiometrics(success => {
+            if (success) {
+                Alert.alert("Login Successful");
+            } else {
+                Alert.alert("Login Failed");
+            }
+        });
+    };
+
+    // Handle HD Wallet creation
+    const createHDWallet = async () => {
+        if (!password) {
+            Alert.alert("Please enter a password");
+            return;
+        }
+        const { encryptedMnemonic, address } = await wallet.createHDWallet(password);
+        setAddress(address);
+        Alert.alert("Wallet Created", `Encrypted Mnemonic: ${encryptedMnemonic}`);
+    };
+
+    // Handle viewing balance
+    const viewBalance = () => {
+        const balance = wallet.getAssetBalance('PI');
+        Alert.alert(`Pi Coin Balance: ${balance}`);
+    };
+
+    // Handle sending transaction
+    const sendTransaction = async () => {
+        try {
+            const result = await wallet.sendTransaction('destination_address', 10, 'YOUR_API_TOKEN');
+            Alert.alert("Transaction Sent", `Result: ${JSON.stringify(result)}`);
+        } catch (error) {
+            Alert.alert("Transaction Failed", error.message);
+        }
+    };
+
+    return (
+        <View style={{ padding: 20 }}>
+            <Text style={{ fontSize: 24, marginBottom: 10 }}>Welcome to PiWallet Pro</Text>
+            
+            <TextInput
+                placeholder="Enter password for HD Wallet"
+                secureTextEntry
+                onChangeText={text => setPassword(text)}
+                style={{ borderWidth: 1, padding: 8, marginVertical: 10 }}
+            />
+
+            <Button title="Biometric Login" onPress={handleBiometricLogin} />
+            <Button title="Create HD Wallet" onPress={createHDWallet} />
+            <Button title="View Pi Balance" onPress={viewBalance} />
+            <Button title="Send Pi" onPress={sendTransaction} />
+            
+            {address ? <Text style={{ marginTop: 20 }}>Wallet Address: {address}</Text> : null}
+        </View>
+    );
+}
+
+export default Dashboard;
